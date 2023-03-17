@@ -3,6 +3,14 @@ import random
 import math
 import matplotlib.pyplot as plt
 
+def travelPath(grid,string):    # function to plot the path
+    x = [i[0] for i in grid] + [grid[0][0]]
+    y = [i[1] for i in grid] + [grid[0][1]]
+
+    plt.plot(x,y,'o-')
+    plt.title( string + ' Solution')
+    plt.show()
+
 def ecldDist(x,y):  # function to fing Euclidean Distance
     x1 = math.pow(x[0]-y[0], 2)
     y1 = math.pow(x[1]-y[1], 2)
@@ -27,19 +35,21 @@ def totalDist(cities):  # funtion to find the cost or total distance for given s
 def simulatedAnnealing(cities): # function in which we are performing Simmulated Annealing
     t0, temp = 0.1, 10**10
     alpha = 0.97
-    prob = random.uniform(0.5,1)
     energy,itr = 1,0
     itr_list,dists = [],[]
     while temp > t0 :
         dup = cities[:]
-        i,j = random.sample(range(1,10),k=2)
-        dup[i], dup[j] = dup[j], dup[i]
+        i,j = random.sample(range(len(cities)),k=2)
+        dup[i],dup[j] = dup[j],dup[i]
         E0 = totalDist(cities)
         E1 = totalDist(dup)
         c = E1 - E0
         energy = math.exp(-c/temp)
+        prob = random.random()
         if c <= 0 or energy > prob:
             cities = dup[:]
+        else:
+            continue
         itr_list.append(itr)
         dists.append(totalDist(cities))
         itr += 1
@@ -55,6 +65,8 @@ if __name__ == '__main__':
     cities = Cities([])
     new_cities = simulatedAnnealing(cities)
     # Initial solution is order of cities that are originally generated randomly
+    travelPath(cities,"Initial")
+    travelPath(new_cities,"Final")
     print('\nInitial Solution of path : ', *cities)
     print('Final Solution of path : ', *new_cities)
     print("\nInitial Cost :", totalDist(cities))
