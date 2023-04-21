@@ -2,5 +2,6 @@
 !*.*
 .vscode/
 *prac*
+project/
 *.DS_Store
 Icon
